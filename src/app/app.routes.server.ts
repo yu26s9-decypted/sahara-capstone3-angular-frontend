@@ -10,6 +10,14 @@ export const serverRoutes: ServerRoute[] = [
     renderMode: RenderMode.Server
   },
   {
+    path: 'conditions-of-use',
+    renderMode: RenderMode.Server
+  },
+  {
+    path: 'privacy-notice',
+    renderMode: RenderMode.Server
+  },
+  {
     path: 'product/:slug',
     renderMode: RenderMode.Server
   },
