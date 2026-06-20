@@ -1,9 +1,7 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, effect, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { AuthService } from '../services/auth.service';
 import { UserService } from '../services/userprofile.service';
-import { AccountDetail } from '../component/account-detail/account-detail';
-import { Profile } from '../model/userprofile.model';
 
 @Component({
   selector: 'app-navbar',
@@ -11,18 +9,18 @@ import { Profile } from '../model/userprofile.model';
   templateUrl: './navbar.html',
   styleUrl: './navbar.css',
 })
-export class Navbar implements OnInit {
+export class Navbar {
   authService = inject(AuthService);
   userService = inject(UserService);
-  profile = signal<Profile | null>(null)
+  profile = this.userService.profile;
 
-  ngOnInit(): void {
-    if(this.authService.isAuthenticated()){
-      this.userService.getUserProfile().subscribe({
-        next: (profile) => this.profile.set(profile)
-      });
-    }
+  constructor() {
+    effect(() => {
+      if (this.authService.isAuthenticated()) {
+        this.userService.loadUserProfile();
+      } else {
+        this.userService.clearProfile();
+      }
+    });
   }
 }
-
-

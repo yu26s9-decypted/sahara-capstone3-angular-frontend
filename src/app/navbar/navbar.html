@@ -9,8 +9,10 @@
       <span class="block text-xs text-slate-300">Delivering to</span>
       @if(!authService.isAuthenticated()){
         <span class="block text-sm font-bold">Your oasis</span>
+      } @else if(profile()?.address && profile()?.state) {
+        <span class="block max-w-40 truncate text-sm font-bold">{{ profile()?.address }}, {{ profile()?.state }}</span>
       } @else {
-        <span class="block text-sm font-bold">{{ profile()?.address }}, {{ profile()?.state }}</span>
+        <span class="block text-sm font-bold">Your oasis</span>
       }
       
     </button>
