@@ -1,14 +1,48 @@
 @if(isLoading()){
-    <div>
-        <span>Loading please wait.</span>
+    <div class="mx-auto max-w-7xl px-6 py-10">
+        <span class="text-sm text-zinc-600">Loading product...</span>
     </div>
 }
 
 @if(product()){
-    <div>
-        <div class="mb-4 flex h-60 items-end justify-center">
-            <img class="max-h-60 w-full object-contain" [src]="product()?.imageUrl" height="200" width="200">
+    <section class="mx-auto max-w-[92rem] px-6 py-5">
+        <nav class="mb-5 text-sm text-zinc-500">
+            Sahara Home &gt; Products &gt; {{product()?.subCategory}}
+        </nav>
+
+        <div class="grid gap-10 lg:grid-cols-[40rem_1fr]">
+            <div class="flex min-h-[34rem] items-center justify-center bg-zinc-50">
+                <img class="max-h-[32rem] w-full object-contain" [src]="product()?.imageUrl" height="600" width="600">
+            </div>
+
+            <div class="max-w-[42rem]">
+                <div class="border-b border-zinc-200 pb-5">
+                    <p class="text-sm font-semibold text-zinc-950">{{product()?.subCategory}}</p>
+                    <h1 class="mt-4 text-2xl font-semibold leading-8 text-zinc-950">{{product()?.name}}</h1>
+                    <p class="mt-2 text-sm text-zinc-500">Product ID: {{product()?.productId}}</p>
+                    <p class="mt-4 leading-7 text-zinc-700">{{product()?.description}}</p>
+
+                    <div class="mt-5">
+                        @if(product()?.isFeatured){
+                            <span class="rounded-sm bg-green-50 px-2 py-1 text-sm font-semibold text-green-700">Reduced price</span>
+                        }
+                    </div>
+                </div>
+
+                <div class="border-b border-zinc-200 py-5">
+                    @if(product()?.isFeatured){
+                        <p class="text-sm text-zinc-500">Limited time deal</p>
+                    }
+                    <p class="mt-1 text-3xl font-bold leading-none text-zinc-950">
+                        {{product()?.price | currency: 'USD':'symbol':'1.2-2'}}
+                    </p>
+                </div>
+
+                <div class="mt-5 flex flex-wrap gap-3">
+                    <button class="rounded-full border border-zinc-900 px-6 py-2 text-sm font-bold text-zinc-950">Add to cart</button>
+                    <button class="rounded-full bg-blue-700 px-6 py-2 text-sm font-bold text-white">Buy now</button>
+                </div>
+            </div>
         </div>
-        <h1>{{product()?.name}}</h1>
-    </div>
+    </section>
 }
