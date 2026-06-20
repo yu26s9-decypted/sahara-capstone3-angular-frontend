@@ -1,0 +1,41 @@
+<main class="min-h-dvh bg-white text-slate-950">
+    <section class="mx-auto flex max-w-7xl justify-center px-6 py-16">
+        <div class="w-full max-w-sm">
+            <h1 class="mt-2 text-2xl font-bold text-slate-950">Sign in to Sahara</h1>
+            <p class="mt-2 text-sm leading-6 text-slate-600">Enter your username to continue to your account.</p>
+
+            <label class="mt-8 block text-sm font-semibold text-slate-800" for="email">User</label>
+            <div class="mt-2 flex h-12 items-center border-b-2 border-slate-300 focus-within:border-blue-700">
+                <input class="min-w-0 flex-1 bg-transparent text-base text-slate-950 outline-none placeholder:text-slate-400" 
+                id="email" type="email" placeholder="Enter your user" [(ngModel)]="username">
+                <i class="ph ph-envelope-simple text-xl text-slate-400" aria-hidden="true"></i>
+            </div>
+             <div class="mt-2 flex h-12 items-center border-b-2 border-slate-300 focus-within:border-blue-700">
+                <input class="min-w-0 flex-1 bg-transparent text-base text-slate-950 outline-none placeholder:text-slate-400"
+                id="password" type="password" placeholder="Enter your password"  [(ngModel)]="password">
+                <i class="ph ph-password text-xl text-slate-400" aria-hidden="true"></i>
+            </div>
+
+            <button class="mt-7 h-11 w-full rounded-full bg-blue-700 text-sm font-bold text-white transition hover:bg-blue-600" type="button" (click)="login()">
+                Continue
+            </button>
+
+            <p class="mt-4 text-xs leading-5 text-slate-600">
+                By continuing, you agree to Sahara&apos;s
+                <a class="font-semibold text-blue-700 underline" href="/">Conditions of Use</a>
+                and
+                <a class="font-semibold text-blue-700 underline" href="/">Privacy Notice</a>.
+            </p>
+
+            <div class="my-6 flex items-center gap-4">
+                <div class="h-px flex-1 bg-slate-200"></div>
+                <span class="text-xs font-semibold text-slate-500">New to Sahara?</span>
+                <div class="h-px flex-1 bg-slate-200"></div>
+            </div>
+
+            <a class="flex h-11 w-full items-center justify-center rounded-full border border-slate-300 text-sm font-bold text-slate-950 transition hover:border-blue-700 hover:text-blue-700" href="/">
+                Create your Sahara account
+            </a>
+        </div>
+    </section>
+</main>

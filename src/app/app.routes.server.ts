@@ -6,6 +6,10 @@ export const serverRoutes: ServerRoute[] = [
     renderMode: RenderMode.Server
   },
   {
+    path: 'sign-in',
+    renderMode: RenderMode.Server
+  },
+  {
     path: 'product/:slug',
     renderMode: RenderMode.Server
   },

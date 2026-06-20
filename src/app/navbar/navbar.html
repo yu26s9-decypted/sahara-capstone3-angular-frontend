@@ -17,10 +17,18 @@
       </button>
     </div>
 
-    <a class="hidden rounded-full px-4 py-2 leading-tight transition hover:bg-white/10 lg:block" href="/">
-      <span class="block text-xs text-slate-300">Welcome back</span>
-      <span class="block text-sm font-bold">Your Sahara</span>
+    @if(authService.isLoggedIn()){
+    <a class="hidden rounded-full px-4 py-2 leading-tight transition hover:bg-white/10 lg:block">
+      <span class="block text-xs text-slate-300">Hello,</span>
+      <span class="block text-sm font-bold">{{authService.getUsername()}}</span>
     </a>
+    } @else {
+       <a class="hidden rounded-full px-4 py-2 leading-tight transition hover:bg-white/10 lg:block" routerLink="/sign-in">
+      <span class="block text-xs text-slate-300">Hey, sign in</span>
+      <span class="block text-sm font-bold">Account</span>
+    </a>
+    
+  }
 
     <a class="hidden rounded-full px-4 py-2 leading-tight transition hover:bg-white/10 lg:block" href="/">
       <span class="block text-xs text-slate-300">Track & manage</span>
