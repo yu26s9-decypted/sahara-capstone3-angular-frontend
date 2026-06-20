@@ -1,5 +1,5 @@
 import { HttpClient } from "@angular/common/http";
-import { inject, Injectable } from "@angular/core";
+import { inject, Injectable, signal } from "@angular/core";
 import { AuthResponse, SignInRequest } from "../model/auth.model";
 import { Observable } from "rxjs";
 import { environment } from "../../environment/environment";
@@ -9,17 +9,23 @@ import { environment } from "../../environment/environment";
 })
 export class AuthService{
     private http = inject(HttpClient);
+    isAuthenticated = signal(this.getToken() !== null);
+
+    private get storage(): Storage | null {
+        return typeof localStorage === 'undefined' ? null : localStorage;
+    }
 
     login(request: SignInRequest): Observable<AuthResponse> {
         return this.http.post<AuthResponse>(`${environment.baseURL}/login`, request)
     }
 
     saveToken(token: string): void {
-        localStorage.setItem('session_token', token)
+        this.storage?.setItem('session_token', token)
+        this.isAuthenticated.set(true)
     }
 
     getToken(): string | null {
-        return localStorage.getItem('session_token')
+        return this.storage?.getItem('session_token') ?? null
     }
 
     isLoggedIn(): boolean {
@@ -27,14 +33,16 @@ export class AuthService{
     }
 
     logout(){
-        localStorage.removeItem('session_token')
+        this.storage?.removeItem('session_token')
+        this.storage?.removeItem('username')
+        this.isAuthenticated.set(false)
     }
 
     saveUsername(username: string): void {
-        localStorage.setItem('username', username);
+        this.storage?.setItem('username', username);
     }
 
     getUsername(): string | null {
-        return localStorage.getItem('username');
+        return this.storage?.getItem('username') ?? null;
     }
 }
