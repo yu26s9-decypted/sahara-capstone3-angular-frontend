@@ -1,0 +1,14 @@
+@if(isLoading()){
+    <div>
+        <span>Loading please wait.</span>
+    </div>
+}
+
+@if(product()){
+    <div>
+        <div class="mb-4 flex h-60 items-end justify-center">
+            <img class="max-h-60 w-full object-contain" [src]="product()?.imageUrl" height="200" width="200">
+        </div>
+        <h1>{{product()?.name}}</h1>
+    </div>
+}

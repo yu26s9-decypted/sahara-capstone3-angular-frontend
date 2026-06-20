@@ -6,8 +6,9 @@
 
     <div class="grid grid-cols-2 gap-x-10 gap-y-12 border-b border-zinc-200 pb-8 sm:grid-cols-3 lg:grid-cols-5 xl:grid-cols-6">
         @for(product of products(); track product.productId){
-            <a class="block min-w-0 text-black no-underline" href="/">
-                <div class="flex min-h-[26rem] flex-col">
+            <a class="block min-w-0 text-black no-underline"
+            [routerLink]="['/product', productSlug(product)]">
+                <div class="flex min-h-104 flex-col">
                     <div class="mb-4 flex h-60 items-end justify-center">
                         <img class="max-h-60 w-full object-contain" [src]="product.imageUrl" height="200" width="200">
                     </div>

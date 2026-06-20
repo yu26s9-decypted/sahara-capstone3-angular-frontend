@@ -14,4 +14,8 @@ export class ProductService{
     getAllProduct(): Observable<Product[]>{
         return this.http.get<Product[]>(`${environment.baseURL}/products`)
     }
+
+    getProductById(productId: number): Observable<Product>{
+        return this.http.get<Product>(`${environment.baseURL}/products/${productId}`)
+    }
 }
