@@ -11,8 +11,10 @@ import { environment } from "../../environment/environment";
 export class ProductService{
     constructor(private http: HttpClient) {}
 
-    getAllProduct(): Observable<Product[]>{
-        return this.http.get<Product[]>(`${environment.baseURL}/products`)
+    getAllProduct(name?: string): Observable<Product[]>{
+        const params: any = {};
+        if(name) params['name'] = name;
+        return this.http.get<Product[]>(`${environment.baseURL}/products`, { params })
     }
 
     getProductById(productId: number): Observable<Product>{

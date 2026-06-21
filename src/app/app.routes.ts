@@ -16,5 +16,6 @@ export const routes: Routes = [
     { path: 'privacy-notice', component: PrivacyNotice },
     { path: 'account', component: AccountDetail},
     { path: 'check-out', component: Cart},
-    { path: 'orders', component: OrderDetail}
+    { path: 'orders', component: OrderDetail},
+    { path: 'products', component: Products}
 ];

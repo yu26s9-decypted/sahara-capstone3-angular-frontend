@@ -18,9 +18,11 @@
     </button>
 
     <div class="flex h-11 min-w-0 flex-1 items-center overflow-hidden rounded-full bg-white/95 shadow-sm">
-      <input class="min-w-0 flex-1 bg-transparent px-5 text-base text-slate-950 outline-none placeholder:text-slate-500" type="search" placeholder="Search Sahara">
+      <input class="min-w-0 flex-1 bg-transparent px-5 text-base text-slate-950 outline-none placeholder:text-slate-500" type="search" placeholder="Search Sahara"
+      #searchInput (keyup.enter)="searchProducts(searchInput.value)">
 
-      <button class="mr-1 flex h-9 w-11 items-center justify-center rounded-full bg-blue-600 text-xl text-white transition hover:bg-blue-500" type="button" aria-label="Search">
+      <button class="mr-1 flex h-9 w-11 items-center justify-center rounded-full bg-blue-600 text-xl text-white transition hover:bg-blue-500" type="button" aria-label="Search"
+      (click)="searchProducts(searchInput.value)">
         <i class="ph ph-magnifying-glass" aria-hidden="true"></i>
       </button>
     </div>

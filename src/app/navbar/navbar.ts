@@ -1,5 +1,5 @@
 import { Component, effect, inject, signal } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../services/auth.service';
 import { UserService } from '../services/userprofile.service';
 import { ShoppingCartService } from '../services/shoppingcart.service';
@@ -17,6 +17,9 @@ export class Navbar {
   profile = this.userService.profile;
   cartService = inject(ShoppingCartService)
   user = signal<Profile | null>(null);
+  searchQuery = signal('')
+  private router = inject(Router)
+
   constructor() {
     effect(() => {
       if (this.authService.isAuthenticated()) {
@@ -36,5 +39,10 @@ export class Navbar {
     });
 
     
+  }
+
+  searchProducts(query: string){
+    console.log(query)
+    this.router.navigate(['/products'], {queryParams: { name: query}})
   }
 }
