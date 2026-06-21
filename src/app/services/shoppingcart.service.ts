@@ -33,4 +33,10 @@ export class ShoppingCartService{
     incrementProductQuantity(productId: number, quantity: number): Observable<ShoppingCart>{
         return this.http.put<ShoppingCart>(`${environment.baseURL}/cart/products/${productId}`, {quantity})
     }
+
+    removeCartItem(productId: number): Observable<ShoppingCart> {
+        return this.http.delete<ShoppingCart>(`${environment.baseURL}/cart/products/${productId}`)
+    }
+
+
 }

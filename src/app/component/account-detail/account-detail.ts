@@ -3,10 +3,11 @@ import { Router } from '@angular/router';
 import { UserService } from '../../services/userprofile.service';
 import { User } from '../../model/user.model';
 import { Profile } from '../../model/userprofile.model';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-account-detail',
-  imports: [],
+  imports: [FormsModule],
   templateUrl: './account-detail.html',
   styleUrl: './account-detail.css',
 })

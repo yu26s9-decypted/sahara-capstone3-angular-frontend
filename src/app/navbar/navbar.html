@@ -33,7 +33,7 @@
       aria-haspopup="menu"
       >
         <span class="block text-xs text-slate-300">Hello,</span>
-        <span class="block text-sm font-bold">{{authService.getUsername()}}</span>
+        <span class="block text-sm font-bold">{{user()?.firstName}}</span>
       </button>
 
       <div role="menu" class="invisible absolute right-0 top-full z-50 pt-3 opacity-0 transition group-hover:visible group-hover:opacity-100">

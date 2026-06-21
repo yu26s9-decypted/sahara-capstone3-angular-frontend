@@ -22,6 +22,8 @@ export class Cart implements OnInit {
   isLoading = signal(true)
   cart = signal<ShoppingCart | null>(null);
   private quantitySubject = new Subject<{productId: number, quantity: number}>();
+  
+  deleteProductWarning = signal(false);
 
   isEmpty = computed(() => {
     const c = this.cart();
@@ -66,7 +68,21 @@ export class Cart implements OnInit {
     this.quantitySubject.next({ productId, quantity: currentQuantity + 1 });
   }
 
+  deleteItem(productId: number): void {
+    this.cartService.removeCartItem(productId).subscribe({
+      next:(data) => {
+        this.cart.set(data);
+        this.cartService.cartCount.set(Object.keys(data.items).length);
+      }, error: (err) => console.error(err)
+    })
+  }
+
   removeQuantity(productId: number, currentQuantity: number) {
+    if(currentQuantity <= 1){
+      this.deleteItem(productId);
+      return;
+    }
+
      this.cart.update(c => {
       if(!c) return c;
       c.items[productId].quantity = currentQuantity - 1
@@ -74,4 +90,5 @@ export class Cart implements OnInit {
     });
     this.quantitySubject.next({ productId, quantity: currentQuantity - 1 });
   }
+  
 }
