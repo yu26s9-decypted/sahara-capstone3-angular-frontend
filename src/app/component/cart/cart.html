@@ -1,8 +1,86 @@
-<p>cart works!</p>
-@for(product of cart()!.items | keyvalue; track product.key){
-    <p>{{ product.value.product.name }} - {{ product.value.quantity }}</p>
-    <p>{{product.value.product.price * product.value.quantity | currency: 'USD':'symbol':'1.2-2'}}</p>
-}
 @if(isEmpty()){
-    <h1>Your cart is empty! Add an item here?</h1>
+    <div class="mx-auto max-w-[92rem] px-6 py-10">
+        <p class="text-sm text-zinc-500">Your cart is empty.</p>
+        <a href="/" class="mt-4 inline-block rounded-full border border-zinc-900 px-6 py-2 text-sm font-bold text-zinc-950 hover:bg-zinc-900 hover:text-white transition-colors duration-200 cursor-pointer">
+            Explore sahara!
+        </a>
+    </div>
+} @else {
+    <section class="mx-auto max-w-[92rem] px-6 py-5">
+        <nav class="mb-5 text-sm text-zinc-500">
+            Sahara Home &gt; Cart
+        </nav>
+
+        <h1 class="text-2xl font-semibold text-zinc-950 mb-6">Let's get you checked out {{user()?.firstName}}</h1>
+    
+
+        <div class="grid gap-8 lg:grid-cols-[1fr_360px] items-start">
+
+            <div class="flex flex-col divide-y divide-zinc-200 border border-zinc-200">
+                @for(item of cart()!.items | keyvalue; track item.key){
+                    <div class="grid grid-cols-[96px_1fr_auto] gap-5 p-5 items-start">
+                        <div class="flex aspect-square items-center justify-center bg-zinc-50">
+                            <img [src]="item.value.product.imageUrl" [alt]="item.value.product.name" class="h-full w-full object-contain">
+                        </div>
+
+                        <div>
+                            <p class="text-sm font-semibold text-zinc-950">{{ item.value.product.name }}</p>
+                            <p class="mt-1 text-sm text-zinc-500">{{ item.value.product.subCategory }}</p>
+                            <p class="mt-1 text-xs text-zinc-400">Product ID: {{ item.value.product.productId }}</p>
+
+                            @if(item.value.product.isFeatured){
+                                <span class="mt-2 inline-block rounded-sm bg-green-50 px-2 py-1 text-xs font-semibold text-green-700">Reduced price</span>
+                            }
+
+                            <div class="mt-4 flex items-center gap-3">
+                                <button class="flex h-7 w-7 items-center justify-center border border-zinc-300 text-zinc-950 hover:bg-zinc-100 transition-colors cursor-pointer text-base"
+                                (click)="removeQuantity(item.value.product.productId, item.value.quantity)"
+                                >−</button>
+                                <span class="text-sm font-semibold text-zinc-950 min-w-[1rem] text-center"
+                                >{{ item.value.quantity }}</span>
+                                <button class="flex h-7 w-7 items-center justify-center border border-zinc-300 text-zinc-950 hover:bg-zinc-100 transition-colors cursor-pointer text-base"
+                                (click)="addQuantity(item.value.product.productId, item.value.quantity)">+</button>
+                                <span class="ml-2 text-xs text-blue-700 cursor-pointer hover:underline">Delete</span>
+                            </div>
+                        </div>
+
+                        <div class="text-right">
+                            <p class="text-base font-bold text-zinc-950">
+                                {{ item.value.product.price * item.value.quantity | currency:'USD':'symbol':'1.2-2' }}
+                            </p>
+                            <p class="mt-1 text-xs text-zinc-500">
+                                {{ item.value.product.price | currency:'USD':'symbol':'1.2-2' }} each
+                            </p>
+                        </div>
+                    </div>
+                }
+            </div>
+
+            <div class="border border-zinc-200 p-5">
+                <p class="text-sm text-zinc-500 mb-3">
+                    Subtotal:
+                    <span class="text-xl font-bold text-zinc-950">{{ cart()?.total | currency:'USD':'symbol':'1.2-2' }}</span>
+                </p>
+
+                <button class="w-full rounded-full bg-blue-700 py-2.5 text-sm font-bold text-white hover:bg-blue-800 transition-colors cursor-pointer mb-2">
+                    Proceed to checkout
+                </button>
+                <button class="w-full rounded-full border border-zinc-900 py-2.5 text-sm font-bold text-zinc-950 hover:bg-zinc-900 hover:text-white transition-colors duration-200 cursor-pointer">
+                    Continue shopping
+                </button>
+
+                <div class="mt-5 border-t border-zinc-200 pt-5 flex flex-col gap-3">
+                    <div class="flex justify-between text-sm text-zinc-500">
+                        <span>Subtotal</span>
+                        <span class="text-zinc-950">{{ cart()?.total | currency:'USD':'symbol':'1.2-2' }}</span>
+                    </div>
+                    <div class="flex justify-between text-sm font-bold text-zinc-950 border-t border-zinc-200 pt-3">
+                        <span>Order total</span>
+                        <span>{{ cart()?.total | currency:'USD':'symbol':'1.2-2' }}</span>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
 }

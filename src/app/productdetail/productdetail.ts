@@ -23,9 +23,13 @@ export class ProductDetail implements OnInit {
     const id = this.product()?.productId;
 
     if(id){
+      this.cartService.cartCount.update(count => count + 1)
       this.cartService.addProductToCart(id).subscribe({
         next: (data) => console.log('added item to cart', data),
-        error: (err) => console.log(err)
+        error: (err) => {
+          console.log(err)
+           this.cartService.cartCount.update(count => count - 1)
+        }
       })
     }
   }
