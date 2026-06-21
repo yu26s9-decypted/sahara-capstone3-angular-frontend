@@ -25,7 +25,7 @@ export class UserService{
     }
 
     editUserProfile(profile: Profile): Observable<Profile>{
-        return this.http.put<Profile>(`${environment.baseURL}/profile`, this.profile)
+        return this.http.put<Profile>(`${environment.baseURL}/profile`, profile)
     }
 
     clearProfile(): void {

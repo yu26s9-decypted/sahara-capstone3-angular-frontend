@@ -52,13 +52,13 @@
                             <label class="block">
                                 <span class="text-sm font-semibold text-slate-800">First name</span>
                                 <input class="mt-2 h-12 w-full border border-slate-300 bg-white px-4 text-base outline-none transition focus:border-blue-700" type="text"
-                                [value]="user()?.firstName ?? ''"
+                                [(ngModel)]="user()!.firstName"
                                 >
                             </label>
 
                             <label class="block">
                                 <span class="text-sm font-semibold text-slate-800">Last name</span>
-                                <input class="mt-2 h-12 w-full border border-slate-300 bg-white px-4 text-base outline-none transition focus:border-blue-700" type="text" [value]="user()?.lastName ?? ''">
+                                <input class="mt-2 h-12 w-full border border-slate-300 bg-white px-4 text-base outline-none transition focus:border-blue-700" type="text" [(ngModel)]="user()!.lastName">
                             </label>
                         </div>
                     </div>
@@ -75,7 +75,7 @@
                             <label class="block">
                                 <span class="text-sm font-semibold text-slate-800">Email address</span>
                                 <div class="mt-2 flex h-12 items-center border border-slate-300 px-4 focus-within:border-blue-700">
-                                    <input class="min-w-0 flex-1 bg-transparent text-base outline-none" type="email" [value]="user()?.email ?? ''">
+                                    <input class="min-w-0 flex-1 bg-transparent text-base outline-none" type="email" [(ngModel)]="user()!.email">
                                     <i class="ph ph-envelope-simple text-xl text-slate-400" aria-hidden="true"></i>
                                 </div>
                             </label>
@@ -83,7 +83,7 @@
                             <label class="block">
                                 <span class="text-sm font-semibold text-slate-800">Phone number</span>
                                 <div class="mt-2 flex h-12 items-center border border-slate-300 px-4 focus-within:border-blue-700">
-                                    <input class="min-w-0 flex-1 bg-transparent text-base outline-none" type="tel" [value]="user()?.phone ?? ''">
+                                    <input class="min-w-0 flex-1 bg-transparent text-base outline-none" type="tel" [(ngModel)]="user()!.phone">
                                     <i class="ph ph-phone text-xl text-slate-400" aria-hidden="true"></i>
                                 </div>
                             </label>
@@ -101,23 +101,23 @@
                         <div class="grid gap-5">
                             <label class="block">
                                 <span class="text-sm font-semibold text-slate-800">Street address</span>
-                                <input class="mt-2 h-12 w-full border border-slate-300 bg-white px-4 text-base outline-none transition focus:border-blue-700" type="text" [value]="user()?.address ?? ''">
+                                <input class="mt-2 h-12 w-full border border-slate-300 bg-white px-4 text-base outline-none transition focus:border-blue-700" type="text" [(ngModel)]="user()!.address">
                             </label>
 
                             <div class="grid gap-5 sm:grid-cols-[1fr_7rem_9rem]">
                                 <label class="block">
                                     <span class="text-sm font-semibold text-slate-800">City</span>
-                                    <input class="mt-2 h-12 w-full border border-slate-300 bg-white px-4 text-base outline-none transition focus:border-blue-700" type="text" [value]="user()?.city ?? ''">
+                                    <input class="mt-2 h-12 w-full border border-slate-300 bg-white px-4 text-base outline-none transition focus:border-blue-700" type="text" [(ngModel)]="user()!.city">
                                 </label>
 
                                 <label class="block">
                                     <span class="text-sm font-semibold text-slate-800">State</span>
-                                    <input class="mt-2 h-12 w-full border border-slate-300 bg-white px-4 text-base uppercase outline-none transition focus:border-blue-700" type="text" maxlength="2" [value]="user()?.state ?? ''">
+                                    <input class="mt-2 h-12 w-full border border-slate-300 bg-white px-4 text-base uppercase outline-none transition focus:border-blue-700" type="text" maxlength="2" [(ngModel)]="user()!.state">
                                 </label>
 
                                 <label class="block">
                                     <span class="text-sm font-semibold text-slate-800">ZIP code</span>
-                                    <input class="mt-2 h-12 w-full border border-slate-300 bg-white px-4 text-base outline-none transition focus:border-blue-700" type="text" [value]="user()?.zip ?? ''">
+                                    <input class="mt-2 h-12 w-full border border-slate-300 bg-white px-4 text-base outline-none transition focus:border-blue-700" type="text" [(ngModel)]="user()!.zip">
                                 </label>
                             </div>
                         </div>
@@ -125,7 +125,7 @@
                 </section>
 
                 <div class="flex flex-wrap gap-3 border-t border-slate-200 pt-6">
-                    <button class="h-11 rounded-full bg-blue-700 px-6 text-sm font-bold text-white transition hover:bg-blue-600" type="button">
+                    <button class="h-11 rounded-full bg-blue-700 px-6 text-sm font-bold text-white transition hover:bg-blue-600" type="button" (click)="saveProfile(user())">
                         Save changes
                     </button>
                     <button class="h-11 rounded-full border border-slate-300 px-6 text-sm font-bold text-slate-950 transition hover:border-blue-700 hover:text-blue-700" type="button">

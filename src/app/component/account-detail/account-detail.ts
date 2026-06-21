@@ -30,4 +30,18 @@ export class AccountDetail implements OnInit{
     })
   }
 
+  saveProfile(profile: Profile | null){
+    if(!profile) return;
+
+    console.log(profile)
+    this.userService.editUserProfile(profile).subscribe({
+      next:(data) => {
+        this.user.set(data);
+        console.log(profile)
+      }, error(err) {
+        console.error(err)
+      },
+    })
+  }
+
 }
