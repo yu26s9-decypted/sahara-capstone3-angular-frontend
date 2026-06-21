@@ -7,6 +7,11 @@ import { UserService } from '../../services/userprofile.service';
 import { Profile } from '../../model/userprofile.model';
 import { debounceTime, Subject } from 'rxjs';
 import { Loading } from '../loading/loading';
+import { PaymentService } from '../../services/stripe.service';
+import { loadStripe, Stripe, StripeCardElement, StripeElements } from '@stripe/stripe-js';
+import { environment } from '../../../environment/environment';
+import { OrderService } from '../../services/order.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-cart',
@@ -25,8 +30,19 @@ export class Cart implements OnInit {
   isLoading = computed(() => this.isCartLoading() || this.isUserLoading());
   cart = signal<ShoppingCart | null>(null);
   private quantitySubject = new Subject<{productId: number, quantity: number}>();
-
+  private paymentService = inject(PaymentService)
   isCheckingOut = signal(false);
+  isPaymentProcessing = signal(false);
+  isStripeReady = signal(false);
+  paymentError = signal('');
+  paymentSuccess = signal(false);
+  router = inject(Router)
+
+  private stripe: Stripe | null = null;
+  private elements: StripeElements | null = null;
+  private cardElement: StripeCardElement | null = null;
+
+  private orderService = inject(OrderService);
 
   deleteProductWarning = signal(false);
 
@@ -116,6 +132,95 @@ export class Cart implements OnInit {
   checkout(){
     this.isCheckingOut.set(true);
     console.log('user is checking out')
+    setTimeout(() => this.initStripe(), 100)
+  }
+
+  placeOrder(){
+    if (this.isPaymentProcessing()) return;
+
+    if (!this.stripe || !this.cardElement) {
+      this.paymentError.set('Card details are still loading. Please try again in a moment.');
+      return;
+    }
+
+    const total = this.cart()?.total ?? 0;
+    const amount = Math.round(total * 100)
+
+    this.isPaymentProcessing.set(true);
+    this.paymentError.set('');
+    this.paymentSuccess.set(false);
+
+    this.paymentService.createPaymentIntent(amount).subscribe({
+      next: async (data) => {
+        const result = await this.stripe!.confirmCardPayment(data.clientSecret, {
+          payment_method: {
+            card: this.cardElement!
+          }
+        })
+
+        if(result?.paymentIntent?.status === 'succeeded'){
+          this.paymentSuccess.set(true);
+          this.orderService.createOrder().subscribe({
+            next: (order) => {
+              console.log('order was created!', order)
+              this.router.navigate([`/order`])
+            },
+          })
+          
+        } else {
+          this.paymentError.set(result?.error?.message ?? 'Payment failed. Please check your card details.');
+          console.error('payment failed.', result?.error)
+        }
+        this.isPaymentProcessing.set(false);
+      }, error: (err) => {
+        this.paymentError.set('Payment could not be started. Please try again.');
+        this.isPaymentProcessing.set(false);
+        console.log(err)
+      },
+    })
+  }
+
+  async initStripe(): Promise<void> {
+    this.isStripeReady.set(false);
+    this.paymentError.set('');
+    this.paymentSuccess.set(false);
+
+    this.stripe = this.stripe ?? await loadStripe(environment.stripePublishableKey);
+
+    if (!this.stripe) {
+      this.paymentError.set('Payment form could not be loaded.');
+      return;
+    }
+
+    this.cardElement?.unmount();
+    this.elements = this.stripe.elements();
+    this.cardElement = this.elements.create('card', {
+      hidePostalCode: true,
+      style: {
+        base: {
+          color: '#0f172a',
+          fontFamily: '"BR Sonoma", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
+          fontSize: '16px',
+          fontSmoothing: 'antialiased',
+          iconColor: '#2563eb',
+          '::placeholder': {
+            color: '#94a3b8',
+          },
+        },
+        invalid: {
+          color: '#dc2626',
+          iconColor: '#dc2626',
+        },
+      },
+    });
+
+    this.cardElement.on('change', (event) => {
+      this.paymentError.set(event.error?.message ?? '');
+      this.paymentSuccess.set(false);
+    });
+
+    this.cardElement.mount('#card-element')
+    this.isStripeReady.set(true);
   }
   
 }
