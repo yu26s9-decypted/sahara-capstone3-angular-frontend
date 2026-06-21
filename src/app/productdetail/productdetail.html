@@ -39,7 +39,10 @@
                 </div>
 
                 <div class="mt-5 flex flex-wrap gap-3">
-                    <button class="rounded-full border border-zinc-900 px-6 py-2 text-sm font-bold text-zinc-950">Add to cart</button>
+                    <button class="rounded-full border border-zinc-900 px-6 py-2 text-sm font-bold text-zinc-950 hover:bg-zinc-900 hover:text-white transition-colors duration-200 cursor-pointer"
+                    (click)="addItemToCart()">
+                        Add to cart
+                    </button>
                     <button class="rounded-full bg-blue-700 px-6 py-2 text-sm font-bold text-white">Buy now</button>
                 </div>
             </div>

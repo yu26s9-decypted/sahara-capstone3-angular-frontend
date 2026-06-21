@@ -12,11 +12,11 @@ import { environment } from "../../environment/environment";
 export class ShoppingCartService{
     constructor(private http: HttpClient) {}
 
-    getCartItem(): Observable<ShoppingCart[]>{
-        return this.http.get<ShoppingCart[]>(`${environment.baseURL}/cart`)
+    getCartItem(): Observable<ShoppingCart>{
+        return this.http.get<ShoppingCart>(`${environment.baseURL}/cart`)
     }
 
-    addProductToCart(productId: number): Observable<ShoppingCartItem>{
-        return this.http.get<ShoppingCartItem>(`${environment.baseURL}/products/${productId}`)
+    addProductToCart(productId: number): Observable<ShoppingCart>{
+        return this.http.post<ShoppingCart>(`${environment.baseURL}/cart/products/${productId}`, {})
     }
 }

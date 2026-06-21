@@ -1,1 +1,8 @@
 <p>cart works!</p>
+@for(product of cart()!.items | keyvalue; track product.key){
+    <p>{{ product.value.product.name }} - {{ product.value.quantity }}</p>
+    <p>{{product.value.product.price * product.value.quantity | currency: 'USD':'symbol':'1.2-2'}}</p>
+}
+@if(isEmpty()){
+    <h1>Your cart is empty! Add an item here?</h1>
+}

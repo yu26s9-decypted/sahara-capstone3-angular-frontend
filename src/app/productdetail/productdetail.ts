@@ -3,6 +3,7 @@ import { CurrencyPipe } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 import { ProductService } from '../services/product.service';
 import { Product } from '../model/product.model';
+import { ShoppingCartService } from '../services/shoppingcart.service';
 
 @Component({
   selector: 'app-productdetail',
@@ -14,7 +15,20 @@ export class ProductDetail implements OnInit {
   isLoading = signal(true);
   private route = inject(ActivatedRoute)
   private productService = inject(ProductService)
+  private cartService = inject(ShoppingCartService)
   product = signal<Product | null >(null);
+
+
+  addItemToCart(){
+    const id = this.product()?.productId;
+
+    if(id){
+      this.cartService.addProductToCart(id).subscribe({
+        next: (data) => console.log('added item to cart', data),
+        error: (err) => console.log(err)
+      })
+    }
+  }
 
   ngOnInit(): void {
     const slug = this.route.snapshot.paramMap.get('slug')
@@ -30,7 +44,6 @@ export class ProductDetail implements OnInit {
       }
     })
   }
-
 
   
   
