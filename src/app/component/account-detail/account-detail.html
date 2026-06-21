@@ -1,8 +1,6 @@
-<main class="bg-white text-slate-950">
+<main class="min-h-[calc(100dvh-4rem)] bg-white text-slate-950">
     @if(isLoading()){
-        <section class="mx-auto max-w-7xl px-6 py-10">
-            <p class="text-sm font-semibold text-slate-600">Loading your Sahara account...</p>
-        </section>
+        <app-loading label="Loading your Sahara account..." [fullViewport]="true"/>
     }
 
     @if(user()){

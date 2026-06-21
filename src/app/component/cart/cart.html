@@ -1,86 +1,259 @@
-@if(isEmpty()){
-    <div class="mx-auto max-w-[92rem] px-6 py-10">
-        <p class="text-sm text-zinc-500">Your cart is empty.</p>
-        <a href="/" class="mt-4 inline-block rounded-full border border-zinc-900 px-6 py-2 text-sm font-bold text-zinc-950 hover:bg-zinc-900 hover:text-white transition-colors duration-200 cursor-pointer">
-            Explore sahara!
-        </a>
-    </div>
-} @else {
-    <section class="mx-auto max-w-[92rem] px-6 py-5">
-        <nav class="mb-5 text-sm text-zinc-500">
-            Sahara Home &gt; Cart
+@if(isLoading()){
+    <app-loading label="Loading your cart..."/>
+} @else if(isEmpty()){
+    <section class="mx-auto max-w-[92rem] px-4 py-5 sm:px-6 sm:py-6">
+        <nav class="mb-5 flex items-center gap-2 text-sm text-slate-500">
+            <a class="font-semibold text-slate-700 hover:text-blue-700" href="/">Sahara Home</a>
+            <i class="ph ph-caret-right text-xs" aria-hidden="true"></i>
+            <span>Cart</span>
         </nav>
 
-        <h1 class="text-2xl font-semibold text-zinc-950 mb-6">Let's get you checked out {{user()?.firstName}}</h1>
-    
-
-        <div class="grid gap-8 lg:grid-cols-[1fr_360px] items-start">
-
-            <div class="flex flex-col divide-y divide-zinc-200 border border-zinc-200">
-                @for(item of cart()!.items | keyvalue; track item.key){
-                    <div class="grid grid-cols-[96px_1fr_auto] gap-5 p-5 items-start">
-                        <div class="flex aspect-square items-center justify-center bg-zinc-50">
-                            <img [src]="item.value.product.imageUrl" [alt]="item.value.product.name" class="h-full w-full object-contain">
-                        </div>
-
-                        <div>
-                            <p class="text-sm font-semibold text-zinc-950">{{ item.value.product.name }}</p>
-                            <p class="mt-1 text-sm text-zinc-500">{{ item.value.product.subCategory }}</p>
-                            <p class="mt-1 text-xs text-zinc-400">Product ID: {{ item.value.product.productId }}</p>
-
-                            @if(item.value.product.isFeatured){
-                                <span class="mt-2 inline-block rounded-sm bg-green-50 px-2 py-1 text-xs font-semibold text-green-700">Reduced price</span>
-                            }
-
-                            <div class="mt-4 flex items-center gap-3">
-                                <button class="flex h-7 w-7 items-center justify-center border border-zinc-300 text-zinc-950 hover:bg-zinc-100 transition-colors cursor-pointer text-base"
-                                (click)="removeQuantity(item.value.product.productId, item.value.quantity)"
-                                >−</button>
-                                <span class="text-sm font-semibold text-zinc-950 min-w-[1rem] text-center"
-                                >{{ item.value.quantity }}</span>
-                                <button class="flex h-7 w-7 items-center justify-center border border-zinc-300 text-zinc-950 hover:bg-zinc-100 transition-colors cursor-pointer text-base"
-                                (click)="addQuantity(item.value.product.productId, item.value.quantity)">+</button>
-                                <span class="ml-2 text-xs text-blue-700 cursor-pointer hover:underline">Delete</span>
-                            </div>
-                        </div>
-
-                        <div class="text-right">
-                            <p class="text-base font-bold text-zinc-950">
-                                {{ item.value.product.price * item.value.quantity | currency:'USD':'symbol':'1.2-2' }}
-                            </p>
-                            <p class="mt-1 text-xs text-zinc-500">
-                                {{ item.value.product.price | currency:'USD':'symbol':'1.2-2' }} each
-                            </p>
-                        </div>
-                    </div>
-                }
-            </div>
-
-            <div class="border border-zinc-200 p-5">
-                <p class="text-sm text-zinc-500 mb-3">
-                    Subtotal:
-                    <span class="text-xl font-bold text-zinc-950">{{ cart()?.total | currency:'USD':'symbol':'1.2-2' }}</span>
-                </p>
-
-                <button class="w-full rounded-full bg-blue-700 py-2.5 text-sm font-bold text-white hover:bg-blue-800 transition-colors cursor-pointer mb-2">
-                    Proceed to checkout
-                </button>
-                <button class="w-full rounded-full border border-zinc-900 py-2.5 text-sm font-bold text-zinc-950 hover:bg-zinc-900 hover:text-white transition-colors duration-200 cursor-pointer">
-                    Continue shopping
-                </button>
-
-                <div class="mt-5 border-t border-zinc-200 pt-5 flex flex-col gap-3">
-                    <div class="flex justify-between text-sm text-zinc-500">
-                        <span>Subtotal</span>
-                        <span class="text-zinc-950">{{ cart()?.total | currency:'USD':'symbol':'1.2-2' }}</span>
-                    </div>
-                    <div class="flex justify-between text-sm font-bold text-zinc-950 border-t border-zinc-200 pt-3">
-                        <span>Order total</span>
-                        <span>{{ cart()?.total | currency:'USD':'symbol':'1.2-2' }}</span>
-                    </div>
+        <div class="border border-slate-200 bg-white p-5 sm:p-6">
+            <div class="flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
+                <div>
+                    <p class="text-sm font-semibold uppercase tracking-wide text-blue-700">Shopping cart</p>
+                    <h1 class="mt-2 text-2xl font-bold leading-tight text-slate-950">Your cart is empty</h1>
+                    <p class="mt-2 text-sm leading-6 text-slate-600">Items you add to your cart will show up here.</p>
                 </div>
+                <a href="/" class="inline-flex h-11 items-center justify-center gap-2 rounded-full bg-blue-700 px-5 text-sm font-bold text-white transition hover:bg-blue-600">
+                    Continue shopping
+                    <i class="ph ph-arrow-right" aria-hidden="true"></i>
+                </a>
             </div>
-
         </div>
     </section>
+} @else {
+    @if(!isCheckingOut()){
+        <section class="mx-auto max-w-[92rem] px-4 py-5 sm:px-6 sm:py-6">
+            <nav class="mb-5 flex items-center gap-2 text-sm text-slate-500">
+                <a class="font-semibold text-slate-700 hover:text-blue-700" href="/">Sahara Home</a>
+                <i class="ph ph-caret-right text-xs" aria-hidden="true"></i>
+                <span>Cart</span>
+            </nav>
+
+            <div class="mb-6 flex flex-col justify-between gap-4 border-b border-slate-200 pb-5 md:mb-7 md:flex-row md:items-end md:pb-6">
+                <div>
+                    <p class="text-sm font-semibold uppercase tracking-wide text-blue-700">Shopping cart</p>
+                    <h1 class="mt-2 text-2xl font-bold leading-tight text-slate-950 md:text-3xl">
+                        Let's get you checked out@if(user()?.firstName){, {{ user()?.firstName }}}
+                    </h1>
+                </div>
+                <a href="/" class="inline-flex items-center gap-2 text-sm font-bold text-slate-950 underline decoration-slate-300 underline-offset-4 transition hover:text-blue-700">
+                    <i class="ph ph-arrow-left" aria-hidden="true"></i>
+                    Continue shopping
+                </a>
+            </div>
+
+            <div class="grid gap-8 lg:grid-cols-[minmax(0,1fr)_23rem] lg:items-start">
+                <div class="overflow-hidden border border-slate-200 bg-white">
+                    <div class="divide-y divide-slate-200">
+                        @for(item of cart()!.items | keyvalue; track item.key){
+                            <article class="grid grid-cols-[5.5rem_minmax(0,1fr)] gap-x-4 gap-y-3 p-4 md:grid-cols-[7.5rem_minmax(0,1fr)_8rem] md:gap-5 md:p-5">
+                                <div class="flex aspect-square items-center justify-center bg-slate-50 p-2 md:p-3">
+                                    <img [src]="item.value.product.imageUrl" [alt]="item.value.product.name" class="max-h-full w-full object-contain">
+                                </div>
+
+                                <div class="min-w-0">
+                                    <div class="flex flex-wrap items-center gap-2">
+                                        <p class="text-sm font-semibold text-slate-500">{{ item.value.product.subCategory }}</p>
+                                        @if(item.value.product.isFeatured){
+                                            <span class="inline-flex rounded-sm bg-green-50 px-2 py-1 text-xs font-semibold text-green-700">Reduced price</span>
+                                        }
+                                    </div>
+                                    <h2 class="mt-1 text-base font-bold leading-6 text-slate-950 md:mt-2 md:text-lg">{{ item.value.product.name }}</h2>
+                                    <p class="mt-1 text-xs text-slate-500">Product ID: {{ item.value.product.productId }}</p>
+
+                                    <div class="mt-4 flex flex-wrap items-center gap-2 md:mt-5 md:gap-3">
+                                        <div class="inline-flex h-9 items-center overflow-hidden rounded-full border border-slate-300 bg-white md:h-10">
+                                            <button class="flex h-9 w-9 items-center justify-center text-lg text-slate-950 transition hover:bg-slate-100 md:h-10 md:w-10" type="button" aria-label="Decrease quantity"
+                                                (click)="removeQuantity(item.value.product.productId, item.value.quantity)">
+                                                <i class="ph ph-minus" aria-hidden="true"></i>
+                                            </button>
+                                            <span class="min-w-8 text-center text-sm font-bold text-slate-950">{{ item.value.quantity }}</span>
+                                            <button class="flex h-9 w-9 items-center justify-center text-lg text-slate-950 transition hover:bg-slate-100 md:h-10 md:w-10" type="button" aria-label="Increase quantity"
+                                                (click)="addQuantity(item.value.product.productId, item.value.quantity)">
+                                                <i class="ph ph-plus" aria-hidden="true"></i>
+                                            </button>
+                                        </div>
+
+                                        <button class="inline-flex h-9 items-center gap-2 rounded-full px-2 text-sm font-bold text-blue-700 transition hover:bg-blue-50 md:h-10 md:px-3" type="button"
+                                            (click)="deleteItem(item.value.product.productId)">
+                                            <i class="ph ph-trash" aria-hidden="true"></i>
+                                            Delete
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <div class="col-span-2 flex justify-between border-t border-slate-100 pt-3 md:col-span-1 md:block md:border-t-0 md:pt-0 md:text-right">
+                                    <span class="text-sm font-semibold text-slate-500 md:hidden">Item total</span>
+                                    <div>
+                                        <p class="text-base font-bold text-slate-950 md:text-lg">
+                                            {{ item.value.product.price * item.value.quantity | currency:'USD':'symbol':'1.2-2' }}
+                                        </p>
+                                        <p class="mt-1 text-xs text-slate-500">
+                                            {{ item.value.product.price | currency:'USD':'symbol':'1.2-2' }} each
+                                        </p>
+                                    </div>
+                                </div>
+                            </article>
+                        }
+                    </div>
+                </div>
+
+                <aside class="border border-slate-200 bg-white p-5 shadow-sm lg:sticky lg:top-24">
+                    <div class="flex items-start justify-between gap-4">
+                        <div>
+                            <h2 class="text-lg font-bold text-slate-950">Order summary</h2>
+                        </div>
+                        <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-blue-50 text-xl text-blue-700">
+                            <i class="ph ph-receipt" aria-hidden="true"></i>
+                        </span>
+                    </div>
+
+                    <div class="mt-5 space-y-3 border-t border-slate-200 pt-5">
+                        <div class="flex justify-between text-sm text-slate-600">
+                            <span>Subtotal</span>
+                            <span class="font-semibold text-slate-950">{{ cart()?.total | currency:'USD':'symbol':'1.2-2' }}</span>
+                        </div>
+                        <div class="flex justify-between text-sm text-slate-600">
+                            <span>Estimated shipping</span>
+                            <span class="font-semibold text-slate-950">Free</span>
+                        </div>
+                        <div class="flex justify-between border-t border-slate-200 pt-4 text-base font-bold text-slate-950">
+                            <span>Order total</span>
+                            <span>{{ cart()?.total | currency:'USD':'symbol':'1.2-2' }}</span>
+                        </div>
+                    </div>
+
+                    <button class="mt-6 inline-flex h-12 w-full items-center justify-center gap-2 rounded-full bg-blue-700 px-5 text-sm font-bold text-white transition hover:bg-blue-600" type="button" (click)="checkout()">
+                        Proceed to checkout
+                        <i class="ph ph-arrow-right" aria-hidden="true"></i>
+                    </button>
+                    <a href="/" class="mt-3 inline-flex h-12 w-full items-center justify-center gap-2 rounded-full border border-slate-300 px-5 text-sm font-bold text-slate-950 transition hover:border-blue-700 hover:text-blue-700">
+                        <i class="ph ph-storefront" aria-hidden="true"></i>
+                        Continue shopping
+                    </a>
+                </aside>
+            </div>
+        </section>
+    } @else {
+        <section class="mx-auto max-w-[92rem] px-4 py-5 sm:px-6 sm:py-6">
+            <nav class="mb-5 flex items-center gap-2 text-sm text-slate-500">
+                <a class="font-semibold text-slate-700 hover:text-blue-700" href="/">Sahara Home</a>
+                <i class="ph ph-caret-right text-xs" aria-hidden="true"></i>
+                <button class="font-semibold text-slate-700 transition hover:text-blue-700" type="button" (click)="isCheckingOut.set(false)">Cart</button>
+                <i class="ph ph-caret-right text-xs" aria-hidden="true"></i>
+                <span>Checkout</span>
+            </nav>
+
+            <div class="mb-7 border-b border-slate-200 pb-6">
+                <p class="text-sm font-semibold uppercase tracking-wide text-blue-700">Checkout</p>
+                <h1 class="mt-2 text-2xl font-bold leading-tight text-slate-950 md:text-3xl">Review and confirm your order</h1>
+            </div>
+
+            <div class="grid gap-8 lg:grid-cols-[minmax(0,1fr)_23rem] lg:items-start">
+                <div class="space-y-6">
+                    <section class="overflow-hidden border border-slate-200 bg-white">
+                        <div class="flex items-center justify-between border-b border-slate-200 bg-slate-50 px-5 py-4">
+                            <div>
+                                <p class="text-xs font-bold uppercase tracking-wide text-slate-500">Step 1</p>
+                                <h2 class="mt-1 text-lg font-bold text-slate-950">Shipping address</h2>
+                            </div>
+                            <i class="ph ph-map-pin text-2xl text-blue-700" aria-hidden="true"></i>
+                        </div>
+                        <div class="grid gap-4 p-5 sm:grid-cols-2">
+                            <label class="block sm:col-span-2">
+                                <span class="text-sm font-bold text-slate-800">Street address</span>
+                                <input type="text" [value]="user()?.address ?? ''" autocomplete="street-address" class="mt-2 h-12 w-full border border-slate-300 bg-white px-4 text-sm text-slate-950 outline-none transition placeholder:text-slate-400 focus:border-blue-700">
+                            </label>
+                            <label class="block">
+                                <span class="text-sm font-bold text-slate-800">City</span>
+                                <input type="text" [value]="user()?.city ?? ''" autocomplete="address-level2" class="mt-2 h-12 w-full border border-slate-300 bg-white px-4 text-sm text-slate-950 outline-none transition placeholder:text-slate-400 focus:border-blue-700">
+                            </label>
+                            <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                                <label class="block">
+                                    <span class="text-sm font-bold text-slate-800">State</span>
+                                    <input type="text" [value]="user()?.state ?? ''" autocomplete="address-level1" class="mt-2 h-12 w-full border border-slate-300 bg-white px-4 text-sm text-slate-950 outline-none transition placeholder:text-slate-400 focus:border-blue-700">
+                                </label>
+                                <label class="block">
+                                    <span class="text-sm font-bold text-slate-800">ZIP</span>
+                                    <input type="text" [value]="user()?.zip ?? ''" autocomplete="postal-code" class="mt-2 h-12 w-full border border-slate-300 bg-white px-4 text-sm text-slate-950 outline-none transition placeholder:text-slate-400 focus:border-blue-700">
+                                </label>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section class="overflow-hidden border border-slate-200 bg-white">
+                        <div class="flex items-center justify-between border-b border-slate-200 bg-slate-50 px-5 py-4">
+                            <div>
+                                <p class="text-xs font-bold uppercase tracking-wide text-slate-500">Step 2</p>
+                                <h2 class="mt-1 text-lg font-bold text-slate-950">Payment</h2>
+                            </div>
+                            <i class="ph ph-credit-card text-2xl text-blue-700" aria-hidden="true"></i>
+                        </div>
+                        <div class="space-y-4 p-5">
+                            <label class="block">
+                                <span class="text-sm font-bold text-slate-800">Card number</span>
+                                <input type="text" inputmode="numeric" autocomplete="cc-number" placeholder="1234 5678 9012 3456" class="mt-2 h-12 w-full border border-slate-300 bg-white px-4 text-sm text-slate-950 outline-none transition placeholder:text-slate-400 focus:border-blue-700">
+                            </label>
+                            <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                                <label class="block">
+                                    <span class="text-sm font-bold text-slate-800">Expiry date</span>
+                                    <input type="text" inputmode="numeric" autocomplete="cc-exp" placeholder="MM/YY" class="mt-2 h-12 w-full border border-slate-300 bg-white px-4 text-sm text-slate-950 outline-none transition placeholder:text-slate-400 focus:border-blue-700">
+                                </label>
+                                <label class="block">
+                                    <span class="text-sm font-bold text-slate-800">CVV</span>
+                                    <input type="text" inputmode="numeric" autocomplete="cc-csc" placeholder="123" class="mt-2 h-12 w-full border border-slate-300 bg-white px-4 text-sm text-slate-950 outline-none transition placeholder:text-slate-400 focus:border-blue-700">
+                                </label>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+
+                <aside class="border border-slate-200 bg-white p-5 shadow-sm lg:sticky lg:top-24">
+                    <h2 class="text-lg font-bold text-slate-950">Order summary</h2>
+
+                    <div class="mt-5 space-y-4">
+                        @for(item of cart()!.items | keyvalue; track item.key){
+                            <div class="grid grid-cols-[3.5rem_minmax(0,1fr)_auto] gap-3">
+                                <div class="flex aspect-square items-center justify-center bg-slate-50 p-2">
+                                    <img [src]="item.value.product.imageUrl" [alt]="item.value.product.name" class="max-h-full w-full object-contain">
+                                </div>
+                                <div class="min-w-0">
+                                    <p class="truncate text-sm font-bold text-slate-950">{{ item.value.product.name }}</p>
+                                    <p class="mt-1 text-xs text-slate-500">Qty {{ item.value.quantity }}</p>
+                                </div>
+                                <p class="text-sm font-bold text-slate-950">{{ item.value.product.price * item.value.quantity | currency:'USD':'symbol':'1.2-2' }}</p>
+                            </div>
+                        }
+                    </div>
+
+                    <div class="mt-5 space-y-3 border-t border-slate-200 pt-5">
+                        <div class="flex justify-between text-sm text-slate-600">
+                            <span>Subtotal</span>
+                            <span class="font-semibold text-slate-950">{{ cart()?.total | currency:'USD':'symbol':'1.2-2' }}</span>
+                        </div>
+                        <div class="flex justify-between text-sm text-slate-600">
+                            <span>Shipping</span>
+                            <span class="font-semibold text-slate-950">Free</span>
+                        </div>
+                        <div class="flex justify-between border-t border-slate-200 pt-4 text-base font-bold text-slate-950">
+                            <span>Order total</span>
+                            <span>{{ cart()?.total | currency:'USD':'symbol':'1.2-2' }}</span>
+                        </div>
+                    </div>
+
+                    <button class="mt-6 inline-flex h-12 w-full items-center justify-center gap-2 rounded-full bg-blue-700 px-5 text-sm font-bold text-white transition hover:bg-blue-600" type="button">
+                        <i class="ph ph-lock-key" aria-hidden="true"></i>
+                        Place order
+                    </button>
+                    <button class="mt-3 inline-flex h-12 w-full items-center justify-center gap-2 rounded-full border border-slate-300 px-5 text-sm font-bold text-slate-950 transition hover:border-blue-700 hover:text-blue-700" type="button"
+                        (click)="isCheckingOut.set(false)">
+                        <i class="ph ph-arrow-left" aria-hidden="true"></i>
+                        Back to cart
+                    </button>
+                </aside>
+            </div>
+        </section>
+    }
 }

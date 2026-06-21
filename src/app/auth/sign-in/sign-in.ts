@@ -3,10 +3,11 @@ import { Component, inject, signal } from '@angular/core';
 import { AuthService } from '../../services/auth.service';
 import { Router, RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
+import { Loading } from '../../component/loading/loading';
 
 @Component({
   selector: 'app-sign-in',
-  imports: [FormsModule],
+  imports: [FormsModule, Loading],
   templateUrl: './sign-in.html',
   styleUrl: './sign-in.css',
 })
@@ -20,6 +21,8 @@ export class SignIn {
   isLoading = signal(false)
 
   login(){
+    if (this.isLoading()) return;
+
     console.log('login invoked', this.username, this.password);
     this.isLoading.set(true)
     this.authService.login({

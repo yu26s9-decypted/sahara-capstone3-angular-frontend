@@ -4,10 +4,11 @@ import { ActivatedRoute } from '@angular/router';
 import { ProductService } from '../services/product.service';
 import { Product } from '../model/product.model';
 import { ShoppingCartService } from '../services/shoppingcart.service';
+import { Loading } from '../component/loading/loading';
 
 @Component({
   selector: 'app-productdetail',
-  imports: [CurrencyPipe],
+  imports: [CurrencyPipe, Loading],
   templateUrl: './productdetail.html',
   styleUrl: './productdetail.css',
 })

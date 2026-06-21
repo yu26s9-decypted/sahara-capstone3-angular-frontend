@@ -4,10 +4,11 @@ import { UserService } from '../../services/userprofile.service';
 import { User } from '../../model/user.model';
 import { Profile } from '../../model/userprofile.model';
 import { FormsModule } from '@angular/forms';
+import { Loading } from '../loading/loading';
 
 @Component({
   selector: 'app-account-detail',
-  imports: [FormsModule],
+  imports: [FormsModule, Loading],
   templateUrl: './account-detail.html',
   styleUrl: './account-detail.css',
 })

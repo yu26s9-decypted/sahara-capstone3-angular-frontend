@@ -6,10 +6,11 @@ import { AuthService } from '../../services/auth.service';
 import { UserService } from '../../services/userprofile.service';
 import { Profile } from '../../model/userprofile.model';
 import { debounceTime, Subject } from 'rxjs';
+import { Loading } from '../loading/loading';
 
 @Component({
   selector: 'app-cart',
-  imports: [KeyValuePipe, CurrencyPipe],
+  imports: [KeyValuePipe, CurrencyPipe, Loading],
   templateUrl: './cart.html',
   styleUrl: './cart.css',
 })
@@ -19,15 +20,19 @@ export class Cart implements OnInit {
   userService = inject(UserService)
   authService = inject(AuthService)
   user = signal<Profile | null>(null);
-  isLoading = signal(true)
+  private isCartLoading = signal(true);
+  private isUserLoading = signal(true);
+  isLoading = computed(() => this.isCartLoading() || this.isUserLoading());
   cart = signal<ShoppingCart | null>(null);
   private quantitySubject = new Subject<{productId: number, quantity: number}>();
-  
+
+  isCheckingOut = signal(false);
+
   deleteProductWarning = signal(false);
 
   isEmpty = computed(() => {
     const c = this.cart();
-    return !c || Object.keys(c.items).length === 0;
+    return !!c && Object.keys(c.items).length === 0;
   });
 
   constructor() {
@@ -43,16 +48,23 @@ export class Cart implements OnInit {
 
   ngOnInit(): void {
     this.cartService.getCartItem().subscribe({
-      next: (data) => this.cart.set(data),
-      error: (err) => console.error(err)
+      next: (data) => {
+        this.cart.set(data);
+        this.isCartLoading.set(false);
+      },
+      error: (err) => {
+        this.cart.set({ items: {}, total: 0 });
+        this.isCartLoading.set(false);
+        console.error(err);
+      }
     });
 
     this.userService.getUserProfile().subscribe({
       next: (data) => {
         this.user.set(data);
-        this.isLoading.set(false)
+        this.isUserLoading.set(false)
       }, error: (err) => {
-        this.isLoading.set(false)
+        this.isUserLoading.set(false)
         console.error(err);
       }
     })
@@ -69,13 +81,23 @@ export class Cart implements OnInit {
   }
 
   deleteItem(productId: number): void {
+    // optimistic update
+    this.cart.update(c => {
+        if (!c) return c;
+        const items = { ...c.items };
+        delete items[productId];
+        return { ...c, items };
+    });
+    this.cartService.cartCount.update(count => count - 1);
+
     this.cartService.removeCartItem(productId).subscribe({
-      next:(data) => {
-        this.cart.set(data);
-        this.cartService.cartCount.set(Object.keys(data.items).length);
-      }, error: (err) => console.error(err)
-    })
-  }
+        next: (data) => {
+            this.cart.set(data);
+            this.cartService.cartCount.set(Object.keys(data.items).length);
+        },
+        error: (err) => console.error(err)
+    });
+}
 
   removeQuantity(productId: number, currentQuantity: number) {
     if(currentQuantity <= 1){
@@ -89,6 +111,11 @@ export class Cart implements OnInit {
       return {...c}
     });
     this.quantitySubject.next({ productId, quantity: currentQuantity - 1 });
+  }
+
+  checkout(){
+    this.isCheckingOut.set(true);
+    console.log('user is checking out')
   }
   
 }
