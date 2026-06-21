@@ -163,7 +163,7 @@ export class Cart implements OnInit {
           this.orderService.createOrder().subscribe({
             next: (order) => {
               console.log('order was created!', order)
-              this.router.navigate([`/order`])
+              this.router.navigate([`/orders`])
             },
           })
           
