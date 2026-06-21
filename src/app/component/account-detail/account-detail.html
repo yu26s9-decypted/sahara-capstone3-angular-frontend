@@ -51,14 +51,16 @@
                         <div class="grid gap-5 sm:grid-cols-2">
                             <label class="block">
                                 <span class="text-sm font-semibold text-slate-800">First name</span>
-                                <input class="mt-2 h-12 w-full border border-slate-300 bg-white px-4 text-base outline-none transition focus:border-blue-700" type="text"
+                                <input class="mt-2 h-12 w-full border border-slate-300 bg-white px-4 text-base outline-none transition focus:border-blue-700 disabled:bg-slate-50 disabled:text-slate-500" type="text"
                                 [(ngModel)]="user()!.firstName"
+                                (ngModelChange)="clearSaveStatus()"
+                                [disabled]="isSaving()"
                                 >
                             </label>
 
                             <label class="block">
                                 <span class="text-sm font-semibold text-slate-800">Last name</span>
-                                <input class="mt-2 h-12 w-full border border-slate-300 bg-white px-4 text-base outline-none transition focus:border-blue-700" type="text" [(ngModel)]="user()!.lastName">
+                                <input class="mt-2 h-12 w-full border border-slate-300 bg-white px-4 text-base outline-none transition focus:border-blue-700 disabled:bg-slate-50 disabled:text-slate-500" type="text" [(ngModel)]="user()!.lastName" (ngModelChange)="clearSaveStatus()" [disabled]="isSaving()">
                             </label>
                         </div>
                     </div>
@@ -75,7 +77,7 @@
                             <label class="block">
                                 <span class="text-sm font-semibold text-slate-800">Email address</span>
                                 <div class="mt-2 flex h-12 items-center border border-slate-300 px-4 focus-within:border-blue-700">
-                                    <input class="min-w-0 flex-1 bg-transparent text-base outline-none" type="email" [(ngModel)]="user()!.email">
+                                    <input class="min-w-0 flex-1 bg-transparent text-base outline-none disabled:text-slate-500" type="email" [(ngModel)]="user()!.email" (ngModelChange)="clearSaveStatus()" [disabled]="isSaving()">
                                     <i class="ph ph-envelope-simple text-xl text-slate-400" aria-hidden="true"></i>
                                 </div>
                             </label>
@@ -83,7 +85,7 @@
                             <label class="block">
                                 <span class="text-sm font-semibold text-slate-800">Phone number</span>
                                 <div class="mt-2 flex h-12 items-center border border-slate-300 px-4 focus-within:border-blue-700">
-                                    <input class="min-w-0 flex-1 bg-transparent text-base outline-none" type="tel" [(ngModel)]="user()!.phone">
+                                    <input class="min-w-0 flex-1 bg-transparent text-base outline-none disabled:text-slate-500" type="tel" [(ngModel)]="user()!.phone" (ngModelChange)="clearSaveStatus()" [disabled]="isSaving()">
                                     <i class="ph ph-phone text-xl text-slate-400" aria-hidden="true"></i>
                                 </div>
                             </label>
@@ -101,36 +103,55 @@
                         <div class="grid gap-5">
                             <label class="block">
                                 <span class="text-sm font-semibold text-slate-800">Street address</span>
-                                <input class="mt-2 h-12 w-full border border-slate-300 bg-white px-4 text-base outline-none transition focus:border-blue-700" type="text" [(ngModel)]="user()!.address">
+                                <input class="mt-2 h-12 w-full border border-slate-300 bg-white px-4 text-base outline-none transition focus:border-blue-700 disabled:bg-slate-50 disabled:text-slate-500" type="text" [(ngModel)]="user()!.address" (ngModelChange)="clearSaveStatus()" [disabled]="isSaving()">
                             </label>
 
                             <div class="grid gap-5 sm:grid-cols-[1fr_7rem_9rem]">
                                 <label class="block">
                                     <span class="text-sm font-semibold text-slate-800">City</span>
-                                    <input class="mt-2 h-12 w-full border border-slate-300 bg-white px-4 text-base outline-none transition focus:border-blue-700" type="text" [(ngModel)]="user()!.city">
+                                    <input class="mt-2 h-12 w-full border border-slate-300 bg-white px-4 text-base outline-none transition focus:border-blue-700 disabled:bg-slate-50 disabled:text-slate-500" type="text" [(ngModel)]="user()!.city" (ngModelChange)="clearSaveStatus()" [disabled]="isSaving()">
                                 </label>
 
                                 <label class="block">
                                     <span class="text-sm font-semibold text-slate-800">State</span>
-                                    <input class="mt-2 h-12 w-full border border-slate-300 bg-white px-4 text-base uppercase outline-none transition focus:border-blue-700" type="text" maxlength="2" [(ngModel)]="user()!.state">
+                                    <input class="mt-2 h-12 w-full border border-slate-300 bg-white px-4 text-base uppercase outline-none transition focus:border-blue-700 disabled:bg-slate-50 disabled:text-slate-500" type="text" maxlength="2" [(ngModel)]="user()!.state" (ngModelChange)="clearSaveStatus()" [disabled]="isSaving()">
                                 </label>
 
                                 <label class="block">
                                     <span class="text-sm font-semibold text-slate-800">ZIP code</span>
-                                    <input class="mt-2 h-12 w-full border border-slate-300 bg-white px-4 text-base outline-none transition focus:border-blue-700" type="text" [(ngModel)]="user()!.zip">
+                                    <input class="mt-2 h-12 w-full border border-slate-300 bg-white px-4 text-base outline-none transition focus:border-blue-700 disabled:bg-slate-50 disabled:text-slate-500" type="text" [(ngModel)]="user()!.zip" (ngModelChange)="clearSaveStatus()" [disabled]="isSaving()">
                                 </label>
                             </div>
                         </div>
                     </div>
                 </section>
 
-                <div class="flex flex-wrap gap-3 border-t border-slate-200 pt-6">
-                    <button class="h-11 rounded-full bg-blue-700 px-6 text-sm font-bold text-white transition hover:bg-blue-600" type="button" (click)="saveProfile(user())">
-                        Save changes
+                <div class="border-t border-slate-200 pt-6">
+                    <div class="flex flex-wrap items-center gap-3">
+                    <button class="inline-flex h-11 items-center justify-center gap-2 rounded-full bg-blue-700 px-6 text-sm font-bold text-white transition hover:bg-blue-600 disabled:cursor-not-allowed disabled:bg-blue-400" type="button" (click)="saveProfile(user())" [disabled]="isSaving()">
+                        @if(isSaving()){
+                            <span class="h-4 w-4 animate-spin rounded-full border-2 border-white/40 border-t-white" aria-hidden="true"></span>
+                            Saving...
+                        } @else {
+                            Save changes
+                        }
                     </button>
-                    <button class="h-11 rounded-full border border-slate-300 px-6 text-sm font-bold text-slate-950 transition hover:border-blue-700 hover:text-blue-700" type="button">
+                    <button class="h-11 rounded-full border border-slate-300 px-6 text-sm font-bold text-slate-950 transition hover:border-blue-700 hover:text-blue-700 disabled:cursor-not-allowed disabled:text-slate-400" type="button" (click)="resetForm()" [disabled]="isSaving()">
                         Cancel
                     </button>
+
+                    @if(saveState() === 'saving'){
+                        <app-loading label="Updating account..." [compact]="true"/>
+                    }
+                    </div>
+
+                    @if(saveMessage()){
+                        <p class="mt-4 text-sm font-semibold"
+                            [class.text-green-700]="saveState() === 'saved'"
+                            [class.text-red-600]="saveState() === 'error'">
+                            {{ saveMessage() }}
+                        </p>
+                    }
                 </div>
 
                 <p class="mt-6 border-t border-slate-200 pt-4 text-xs font-semibold text-slate-500">

@@ -1,6 +1,6 @@
 import { HttpClient } from "@angular/common/http";
 import { Injectable, signal } from "@angular/core";
-import { Observable } from "rxjs";
+import { Observable, tap } from "rxjs";
 import { environment } from "../../environment/environment";
 import { Profile } from "../model/userprofile.model";
 
@@ -25,7 +25,9 @@ export class UserService{
     }
 
     editUserProfile(profile: Profile): Observable<Profile>{
-        return this.http.put<Profile>(`${environment.baseURL}/profile`, profile)
+        return this.http.put<Profile>(`${environment.baseURL}/profile`, profile).pipe(
+            tap(updatedProfile => this.profile.set(updatedProfile))
+        )
     }
 
     clearProfile(): void {

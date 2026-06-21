@@ -3,7 +3,6 @@ import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../services/auth.service';
 import { UserService } from '../services/userprofile.service';
 import { ShoppingCartService } from '../services/shoppingcart.service';
-import { Profile } from '../model/userprofile.model';
 
 @Component({
   selector: 'app-navbar',
@@ -16,7 +15,6 @@ export class Navbar {
   userService = inject(UserService);
   profile = this.userService.profile;
   cartService = inject(ShoppingCartService)
-  user = signal<Profile | null>(null);
   searchQuery = signal('')
   private router = inject(Router)
 
@@ -25,14 +23,6 @@ export class Navbar {
       if (this.authService.isAuthenticated()) {
         this.userService.loadUserProfile();
         this.cartService.loadCart();
-
-        this.userService.getUserProfile().subscribe({
-      next: (data) => {
-        this.user.set(data);
-      }, error: (err) => {
-        console.error(err);
-      }
-    })
       } else {
         this.userService.clearProfile();
       }
