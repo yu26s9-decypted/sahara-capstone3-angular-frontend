@@ -196,6 +196,7 @@ export class Cart implements OnInit {
     this.elements = this.stripe.elements();
     this.cardElement = this.elements.create('card', {
       hidePostalCode: true,
+      
       style: {
         base: {
           color: '#0f172a',

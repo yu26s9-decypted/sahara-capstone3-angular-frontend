@@ -36,14 +36,19 @@
                 </div>
 
                 <div class="mb-8 text-sm font-semibold text-blue-700">
-                    <a href="/">Account</a>
-                    <span class="px-2 text-slate-400">&gt;</span>
-                    <span class="text-slate-700">Login & security</span>
+                   
+                    <div class="grid gap-5">
+                        @if (user()?.oasis === true) {
+                            <h1>Thank you for being a Oasis member!</h1>
+                        }
+                    </div>
+                    
                 </div>
 
                 <section class="border-t border-slate-200 py-6">
                     <div class="grid gap-2 sm:grid-cols-[12rem_1fr]">
                         <div>
+
                             <h2 class="text-xl font-bold">Personal information</h2>
                             <p class="mt-2 text-sm leading-6 text-slate-600">The basics we use to greet you properly.</p>
                         </div>

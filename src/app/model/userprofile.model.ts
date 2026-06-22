@@ -8,4 +8,5 @@ export interface Profile {
     city: string;
     state: string;
     zip: string;
+    oasis?: boolean
 }

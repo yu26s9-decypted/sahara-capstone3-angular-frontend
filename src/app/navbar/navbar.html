@@ -1,7 +1,12 @@
 <header class="sticky top-0 z-50 bg-slate-950 text-white shadow-md">
   <nav class="flex min-h-16 items-center gap-3 px-4">
     <a class="flex h-12 shrink-0 items-center rounded-full px-3 transition hover:bg-white/10" routerLink="/">
-      <img class="h-9 w-28 brightness-0 invert" src="/sahara-v2.svg" alt="Sahara">
+      @if(profile()?.oasis == true){
+        <img class="h-9 w-28 brightness-0 invert" src="/SaharaOasis.svg" alt="Sahara">
+      } @else {
+        <img class="h-9 w-28 brightness-0 invert" src="/sahara-v2.svg" alt="Sahara">
+      }
+       
     </a>
 
     
