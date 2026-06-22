@@ -8,6 +8,8 @@ import { AccountDetail } from './component/account-detail/account-detail';
 import { Cart } from './component/cart/cart';
 import { OrderDetail } from './component/order-detail/order-detail';
 import { CreateAccount } from './auth/create-account/create-account';
+import { Oasis } from './component/oasis/oasis';
+import { authGuard } from './auth/auth.guard';
 
 export const routes: Routes = [
     { path: '', component: Products },
@@ -19,5 +21,6 @@ export const routes: Routes = [
     { path: 'check-out', component: Cart},
     { path: 'orders', component: OrderDetail},
     { path: 'products', component: Products},
-    { path: 'create-account', component: CreateAccount}
+    { path: 'create-account', component: CreateAccount},
+    { path: 'oasis', component: Oasis, canActivate: [authGuard]}
 ];

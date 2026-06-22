@@ -14,4 +14,9 @@ export class PaymentService{
         return this.http.post<{ clientSecret: string}>(`${environment.baseURL}/payment/create-intent`, {amount})
     }
 
+    createCheckOutSession(priceId: string): Observable<{ url: string }>{
+        return this.http.post<{ url: string }>(`${environment.baseURL}/payment/create-subscription`, {
+            priceId
+        });
+    }
 }
