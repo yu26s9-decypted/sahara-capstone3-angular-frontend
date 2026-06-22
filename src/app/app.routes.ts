@@ -7,6 +7,7 @@ import { PrivacyNotice } from './legal/privacy-notice/privacy-notice';
 import { AccountDetail } from './component/account-detail/account-detail';
 import { Cart } from './component/cart/cart';
 import { OrderDetail } from './component/order-detail/order-detail';
+import { CreateAccount } from './auth/create-account/create-account';
 
 export const routes: Routes = [
     { path: '', component: Products },
@@ -17,5 +18,6 @@ export const routes: Routes = [
     { path: 'account', component: AccountDetail},
     { path: 'check-out', component: Cart},
     { path: 'orders', component: OrderDetail},
-    { path: 'products', component: Products}
+    { path: 'products', component: Products},
+    { path: 'create-account', component: CreateAccount}
 ];

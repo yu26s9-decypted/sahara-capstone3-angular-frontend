@@ -7,7 +7,7 @@ import { Loading } from '../../component/loading/loading';
 
 @Component({
   selector: 'app-sign-in',
-  imports: [FormsModule, Loading],
+  imports: [FormsModule, Loading, RouterLink],
   templateUrl: './sign-in.html',
   styleUrl: './sign-in.css',
 })

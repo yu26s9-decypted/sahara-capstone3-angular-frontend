@@ -1,6 +1,6 @@
 import { HttpClient } from "@angular/common/http";
 import { inject, Injectable, signal } from "@angular/core";
-import { AuthResponse, SignInRequest } from "../model/auth.model";
+import { AuthResponse, RegisterRequest, SignInRequest } from "../model/auth.model";
 import { Observable } from "rxjs";
 import { environment } from "../../environment/environment";
 
@@ -17,6 +17,10 @@ export class AuthService{
 
     login(request: SignInRequest): Observable<AuthResponse> {
         return this.http.post<AuthResponse>(`${environment.baseURL}/login`, request)
+    }
+
+    signUp(request: RegisterRequest): Observable<AuthResponse> {
+        return this.http.post<AuthResponse>(`${environment.baseURL}/register`, request)
     }
 
     saveToken(token: string): void {
