@@ -23,7 +23,13 @@ export class AuthService{
         return this.http.post<AuthResponse>(`${environment.baseURL}/register`, request)
     }
 
-    saveToken(token: string): void {
+    saveToken(token: string | null | undefined): void {
+        if (!token) {
+            this.storage?.removeItem('session_token')
+            this.isAuthenticated.set(false)
+            return;
+        }
+
         this.storage?.setItem('session_token', token)
         this.isAuthenticated.set(true)
     }
