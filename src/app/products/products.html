@@ -1,7 +1,4 @@
-@if(isLoading()){
-    <app-loading label="Loading products..."/>
-} @else {
-    <section class="mx-auto max-w-[101rem] bg-white px-6 py-6">
+<section class="mx-auto max-w-[101rem] bg-white px-6 py-6">
         <div class="grid gap-8 lg:grid-cols-[17rem_minmax(0,1fr)] lg:items-start">
             <aside class="flex flex-col border-b border-zinc-200 pb-6 lg:sticky lg:top-22 lg:min-h-[calc(100dvh-7rem)] lg:border-b-0 lg:border-r lg:pb-0 lg:pr-7" aria-label="Product filters">
                 <div class="flex items-center justify-between gap-3 border-b border-zinc-200 pb-6">
@@ -11,12 +8,14 @@
                     </button>
                 </div>
 
-                <form class="flex flex-1 flex-col">
+
                     <div class="py-7">
                         <h3 class="mb-5 text-sm font-bold text-zinc-950">Category</h3>
                         <label class="sr-only" for="category-filter">Choose a category</label>
                         <div class="relative">
-                            <select class="h-11 w-full appearance-none rounded-full border border-zinc-300 bg-white px-4 pr-10 text-sm text-zinc-900 outline-none transition focus:border-blue-700 focus:ring-1 focus:ring-blue-700" id="category-filter" name="cat">
+                            <select
+                            (change)="onCategoryChange($event)"
+                            class="h-11 w-full appearance-none rounded-full border border-zinc-300 bg-white px-4 pr-10 text-sm text-zinc-900 outline-none transition focus:border-blue-700 focus:ring-1 focus:ring-blue-700" id="category-filter" name="cat">
                                 <option value="">All categories</option>
                                 <option value="1">Electronics</option>
                                 <option value="2">Fashion</option>
@@ -50,7 +49,7 @@
                     </div>
 
                     <div class="border-t border-zinc-200"></div>
-                </form>
+
             </aside>
 
             <div class="min-w-0">
@@ -61,40 +60,45 @@
                     <a class="text-sm font-medium text-zinc-950 underline underline-offset-4" href="/">Shop the vast desert.</a>
                 </div>
 
-                <div class="grid grid-cols-2 gap-x-8 gap-y-12 border-b border-zinc-200 pb-8 sm:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5">
-                    @for(product of products(); track product.productId){
-                        <a class="block min-w-0 text-black no-underline"
-                        [routerLink]="['/product', productSlug(product)]">
-                            <div class="flex min-h-104 flex-col">
-                                <div class="mb-4 flex h-60 items-end justify-center">
-                                    <img class="max-h-60 w-full object-contain" [src]="product.imageUrl" height="200" width="200">
+                @if(isLoading()){
+                    <div class="flex min-h-96 items-center justify-center border-b border-zinc-200 pb-8">
+                        <app-loading label="Loading products..." [compact]="true"/>
+                    </div>
+                } @else {
+                    <div class="grid grid-cols-2 gap-x-8 gap-y-12 border-b border-zinc-200 pb-8 sm:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5">
+                        @for(product of products(); track product.productId){
+                            <a class="block min-w-0 text-black no-underline"
+                            [routerLink]="['/product', productSlug(product)]">
+                                <div class="flex min-h-104 flex-col">
+                                    <div class="mb-4 flex h-60 items-end justify-center">
+                                        <img class="max-h-60 w-full object-contain" [src]="product.imageUrl" height="200" width="200">
+                                    </div>
+
+                                    <div class="min-h-7">
+                                        @if(product.isFeatured){
+                                            <span class="inline-flex border border-blue-700 px-2 py-1 text-sm leading-none text-blue-700">Reduced price</span>
+                                        }
+                                    </div>
+
+                                    <div class="mt-3 inline-flex w-fit items-center gap-1 rounded-full border border-zinc-900 px-4 py-2 text-base font-bold leading-none text-zinc-900">
+                                        <span class="text-3xl font-normal leading-4">+</span>
+                                        <span>Add</span>
+                                    </div>
+
+                                    <p class="mt-4 text-2xl font-bold leading-none text-zinc-950">
+                                        @if(product.isFeatured){
+                                            <span class="text-green-700">Now </span>
+                                        }
+                                        {{product.price | currency: 'USD':'symbol':'1.2-2'}}
+                                    </p>
+
+                                    <p class="mt-3 line-clamp-2 text-base leading-6 text-zinc-900">{{product.name}}</p>
+                                    <p class="mt-1 line-clamp-1 text-sm leading-5 text-zinc-600">{{product.description}}</p>
                                 </div>
-
-                                <div class="min-h-7">
-                                    @if(product.isFeatured){
-                                        <span class="inline-flex border border-blue-700 px-2 py-1 text-sm leading-none text-blue-700">Reduced price</span>
-                                    }
-                                </div>
-
-                                <div class="mt-3 inline-flex w-fit items-center gap-1 rounded-full border border-zinc-900 px-4 py-2 text-base font-bold leading-none text-zinc-900">
-                                    <span class="text-3xl font-normal leading-4">+</span>
-                                    <span>Add</span>
-                                </div>
-
-                                <p class="mt-4 text-2xl font-bold leading-none text-zinc-950">
-                                    @if(product.isFeatured){
-                                        <span class="text-green-700">Now </span>
-                                    }
-                                    {{product.price | currency: 'USD':'symbol':'1.2-2'}}
-                                </p>
-
-                                <p class="mt-3 line-clamp-2 text-base leading-6 text-zinc-900">{{product.name}}</p>
-                                <p class="mt-1 line-clamp-1 text-sm leading-5 text-zinc-600">{{product.description}}</p>
-                            </div>
-                        </a>
-                    }
-                </div>
+                            </a>
+                        }
+                    </div>
+                }
             </div>
         </div>
     </section>
-}

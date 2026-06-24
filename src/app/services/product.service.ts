@@ -15,7 +15,7 @@ export class ProductService{
         const params: any = {};
 
         if(name) params['name'] = name;
-        if(categoryId) params['categoryId'] = categoryId;
+        if(categoryId) params['cat'] = categoryId;
         if(minPrice) params['minPrice'] = minPrice;
         if(maxPrice) params['maxPrice'] = maxPrice;
 
