@@ -4,7 +4,7 @@ import { ProductService } from '../services/product.service';
 import { CurrencyPipe } from '@angular/common';
 import { ActivatedRoute, Router, RouterLink } from "@angular/router";
 import { Loading } from '../component/loading/loading';
-import { min, take } from 'rxjs';
+import {take } from 'rxjs';
 
 @Component({
   selector: 'app-products',
@@ -22,18 +22,16 @@ export class Products implements OnInit {
   maxPrice = signal<number | undefined>(undefined)
 
   ngOnInit(): void {
-    console.log("initialize")
     this.route.queryParamMap.subscribe(params => {
       this.isLoading.set(true)
 
       const name = params.get('name') ?? undefined;
       const categoryId = params.get('cat') ? Number(params.get('cat')) : undefined;
-      const maxPrice = params.get('maxPrice') ? Number(params.get('minPrice')) : undefined
+      const maxPrice = params.get('maxPrice') ? Number(params.get('maxPrice')) : undefined
       const minPrice = params.get('minPrice') ? Number(params.get('minPrice')) : undefined
 
       this.productService.getAllProduct(name, categoryId, minPrice, maxPrice).subscribe({
         next: (data) => {
-          console.log(data)
           this.products.set(data);
           this.isLoading.set(false);
         },
@@ -59,27 +57,23 @@ export class Products implements OnInit {
     const value = (event.target as HTMLSelectElement).value;
     const categoryId = value ? Number(value) : undefined;
     console.log(value, categoryId)
-    this.route.queryParamMap.pipe(take(1)).subscribe(current => {
+    this.route.queryParams.pipe(take(1)).subscribe(current => {
         this.router.navigate(['/products'], {queryParams: {...current, cat: categoryId}})
-    })
-   
-    
+    }) 
   }
 
   onMinPriceChange(event: Event){
     const value = (event.target as HTMLInputElement).value;
     this.minPrice.set(value ? Number(value) : undefined);
-    this.applyPriceChange()
   }
 
   onMaxPriceChange(event: Event){
     const value = (event.target as HTMLInputElement).value
     this.maxPrice.set(value ? Number(value) : undefined);
-    this.applyPriceChange()
   }
 
   applyPriceChange(){
-    this.route.queryParamMap.pipe(take(1)).subscribe(current => {
+    this.route.queryParams.pipe(take(1)).subscribe(current => {
       this.router.navigate(['/products'], {
         queryParams: {
           ...current,
@@ -88,6 +82,10 @@ export class Products implements OnInit {
         }
       })
     })
+  }
+
+  clearFilter(){
+    this.router.navigate(['/products'])
   }
 
   
